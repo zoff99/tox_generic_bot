@@ -28,7 +28,7 @@
 
  linux compile:
 
- gcc -O3 -g -flto -fPIC tox_generic_bot.c -fno-omit-frame-pointer -fsanitize=address -static-libasan -Wl,-Bstatic $(pkg-config --cflags --libs libsodium) -Wl,-Bdynamic -pthread -o tox_generic_bot
+ gcc -O3 -std=c99 -g -flto -fPIC tox_generic_bot.c -fno-omit-frame-pointer -fsanitize=address -static-libasan -Wl,-Bstatic $(pkg-config --cflags --libs libsodium) -Wl,-Bdynamic -pthread -o tox_generic_bot
 
 */
 
@@ -54,7 +54,7 @@ static const char global_version_string[] = "0.99.0";
 #ifdef MIN_LOGGER_LEVEL
 #undef MIN_LOGGER_LEVEL
 #endif
-#define MIN_LOGGER_LEVEL LOGGER_LEVEL_DEBUG
+#define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
 // define this before including toxcore amalgamation -------
 
 // include toxcore amalgamation no ToxAV --------
@@ -68,8 +68,8 @@ enum CUSTOM_LOG_LEVEL {
   CLL_DEBUG = 9,
 };
 
-#define BOT_NAME "ToxNgckickBot"
-#define CURRENT_LOG_LEVEL CLL_DEBUG // 0 -> error, 1 -> warn, 2 -> info, 9 -> debug
+#define BOT_NAME "ToxGenericBot"
+#define CURRENT_LOG_LEVEL CLL_INFO // 0 -> error, 1 -> warn, 2 -> info, 9 -> debug
 #define PROXY_HOST_TOR_DEFAULT "127.0.0.1"
 #define PROXY_PORT_TOR_DEFAULT 9050
 static const uint8_t *bot_name_str = BOT_NAME;
@@ -569,12 +569,11 @@ static void bootstrap_tox(Tox *tox)
     tox_bootstrap(tox, "local", 7766, (uint8_t *)"2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1", NULL);
     for (int i = 0; nodes1[i].ip; i++) {
         uint8_t *key = (uint8_t *)calloc(1, 100);
-        hex_string_to_bin2(nodes1[i].key, key);
-        if (!key)
-        {
+        if (!key) {
             dbg(CLL_INFO, "bootstrap_tox:continue ...\n");
             continue;
         }
+        hex_string_to_bin2(nodes1[i].key, key);
         if (use_tor == 0) {
             tox_bootstrap(tox, nodes1[i].ip, nodes1[i].udp_port, key, NULL);
         }
