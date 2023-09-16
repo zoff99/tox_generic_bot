@@ -78,7 +78,7 @@ enum CUSTOM_LOG_LEVEL {
 #define CURRENT_LOG_LEVEL CLL_INFO // 0 -> error, 1 -> warn, 2 -> info, 9 -> debug
 #define PROXY_HOST_TOR_DEFAULT "127.0.0.1"
 #define PROXY_PORT_TOR_DEFAULT 9050
-static const uint8_t *bot_name_str = BOT_NAME;
+static const uint8_t *bot_name_str = (const uint8_t *)(BOT_NAME);
 static uint32_t bot_name_len = strlen(BOT_NAME);
 static FILE *logfile = NULL;
 static const char *log_filename = "tox_generic_bot.log";
@@ -200,7 +200,7 @@ void dbg(enum CUSTOM_LOG_LEVEL level, const char *fmt, ...)
     snprintf(level_and_format_2, (strlen(level_and_format) + 5 + 3 + 3 + 1 + 3 + 3 + 3 + 7 + 1),
              "%04d-%02d-%02d %02d:%02d:%02d.%06ld:%s",
              tm3.tm_year + 1900, tm3.tm_mon + 1, tm3.tm_mday,
-             tm3.tm_hour, tm3.tm_min, tm3.tm_sec, tv.tv_usec, level_and_format);
+             tm3.tm_hour, tm3.tm_min, tm3.tm_sec, (long)tv.tv_usec, level_and_format);
 
     if (level <= CURRENT_LOG_LEVEL)
     {
@@ -275,7 +275,7 @@ static unsigned int char_to_int(char c)
 
 static bool pubkeys_hex_equal(const uint8_t *pubkey1_hex_str, const uint8_t *pubkey2_hex_str)
 {
-    if (strncmp(pubkey1_hex_str, pubkey2_hex_str, (TOX_PUBLIC_KEY_SIZE * 2)) == 0) {
+    if (strncmp((const char *)pubkey1_hex_str, (const char *)pubkey2_hex_str, (TOX_PUBLIC_KEY_SIZE * 2)) == 0) {
         return true;
     } else {
         return false;
