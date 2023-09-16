@@ -6,7 +6,7 @@ on:
 
 jobs:
   compile_linux:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
       - name: install dependencies
@@ -26,11 +26,14 @@ jobs:
           libavformat-dev \
           libavfilter-dev \
           libx264-dev \
-          libasan4
+          libasan4 \
+          clang-15 \
+          clang-tools-15 \
+          libclang-15-dev
 
       - name: compile binary
         run: |
-          gcc -O3 -std=c99 \
+          clang-15 -O3 -std=c99 \
             -Wall \
             -Wextra \
             -Weverything \
