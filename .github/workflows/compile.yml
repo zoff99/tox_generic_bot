@@ -30,7 +30,11 @@ jobs:
 
       - name: compile binary
         run: |
-          gcc -O3 -std=c99 -g -flto -fPIC tox_generic_bot.c -fno-omit-frame-pointer -fsanitize=address -static-libasan -Wl,-Bstatic $(pkg-config --cflags --libs libsodium) -Wl,-Bdynamic -pthread -o tox_generic_bot
+          gcc -O3 -std=c99 \
+            -Wall \
+            -Wextra \
+            -Weverything \
+            -g -flto -fPIC tox_generic_bot.c -fno-omit-frame-pointer -fsanitize=address -static-libasan -Wl,-Bstatic $(pkg-config --cflags --libs libsodium) -Wl,-Bdynamic -pthread -o tox_generic_bot
 
       - name: check binary
         run: |
