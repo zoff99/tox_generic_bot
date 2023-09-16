@@ -84,6 +84,12 @@ static const char global_version_string[] = "0.99.0";
 // ------------------- toxcore amalgamation ----------------
 
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeclaration-after-statement"
+#pragma GCC diagnostic ignored "-Wmissing-prototypes"
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+#pragma GCC diagnostic ignored "-Wunused-macros"
+#pragma GCC diagnostic ignored "-Wunused-function"
 
 enum CUSTOM_LOG_LEVEL {
   CLL_ERROR = 0,
@@ -107,7 +113,7 @@ static bool main_loop_running = true;
 static int switch_tcponly = 0;
 static int use_tor = 0;
 
-struct Node1 {
+static struct Node1 {
     char *ip;
     char *key;
     uint16_t udp_port;
@@ -155,7 +161,7 @@ struct Node1 {
     { NULL, NULL, 0, 0 }
 };
 
-void dbg(enum CUSTOM_LOG_LEVEL level, const char *fmt, ...)
+static void dbg(enum CUSTOM_LOG_LEVEL level, const char *fmt, ...)
 {
     char *level_and_format = NULL;
     char *fmt_copy = NULL;
@@ -175,7 +181,7 @@ void dbg(enum CUSTOM_LOG_LEVEL level, const char *fmt, ...)
         return;
     }
 
-    if ((level < 0) || (level > 9))
+    if (((int)level < 0) || ((int)level > 9))
     {
         level = 0;
     }
@@ -288,7 +294,7 @@ static unsigned int char_to_int(char c)
         return 10 + (uint8_t)c - 'a';
     }
 
-    return -1;
+    return (unsigned int)(' ');
 }
 
 static bool pubkeys_hex_equal(const uint8_t *pubkey1_hex_str, const uint8_t *pubkey2_hex_str)
@@ -310,7 +316,7 @@ static uint8_t *hex_string_to_bin(const char *hex_string)
     uint8_t *val = calloc(1, len);
     for (size_t i = 0; i != len; ++i)
     {
-        val[i] = (16 * char_to_int(hex_string[2 * i])) + (char_to_int(hex_string[2 * i + 1]));
+        val[i] = (uint8_t)((16 * char_to_int(hex_string[2 * i])) + (char_to_int(hex_string[2 * i + 1])));
     }
     return val;
 }
@@ -327,7 +333,7 @@ static void bin2upHex(const uint8_t *bin, uint32_t bin_size, char *hex, uint32_t
 {
     sodium_bin2hex(hex, hex_size, bin, bin_size);
     for (size_t i = 0; i < hex_size - 1; i++) {
-        hex[i] = toupper(hex[i]);
+        hex[i] = (char)toupper(hex[i]);
     }
 }
 
@@ -556,7 +562,7 @@ static Tox* create_tox(void)
     if (f)
     {
         fseek(f, 0, SEEK_END);
-        size_t savedataSize = ftell(f);
+        size_t savedataSize = (size_t)ftell(f);
         fseek(f, 0, SEEK_SET);
         savedata = calloc(1, savedataSize);
         size_t ret = fread(savedata, savedataSize, 1, f);
@@ -611,10 +617,13 @@ static void bootstrap_tox(Tox *tox)
 
 static void print_tox_id(Tox *tox)
 {
-    uint8_t tox_id_bin[tox_address_size()];
+    uint8_t tox_id_bin[TOX_ADDRESS_SIZE];
     tox_self_get_address(tox, tox_id_bin);
-    int tox_address_hex_size = tox_address_size() * 2 + 1;
+    const uint32_t tox_address_hex_size = (TOX_ADDRESS_SIZE) * 2 + 1;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wvla"
     char tox_id_hex[tox_address_hex_size];
+#pragma GCC diagnostic pop
     bin2upHex(tox_id_bin, tox_address_size(), tox_id_hex, tox_address_hex_size);
     printf("--------------------\n");
     printf("--------------------\n");
@@ -754,4 +763,4 @@ int main(int argc, char *argv[])
 }
 
 
-
+#pragma GCC diagnostic pop
