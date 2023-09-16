@@ -52,8 +52,8 @@ jobs:
                     nix-env --install gcc --prebuilt-only
                     nix-env --install binutils --prebuilt-only
                     nix-env --install libsodium --prebuilt-only
-                    gcc -version
-                    cd /work/;gcc -O3 -g -fPIC tox_generic_bot.c gcc -g -O3 tox_generic_bot.c toxcore_amalgamation_no_toxav.c -L/nix/store/b7ac47isdc4z1ajln6adz3ppcjs1708b-libsodium-1.0.18/lib -I/nix/store/hyxa8plwvgbj16fi2rlvm2sy6idlkab1-libsodium-1.0.18-dev/include -o tox_generic_bot || echo "fix me"
+                    gcc --version
+                    cd /work/;gcc -O3 -g -fPIC tox_generic_bot.c gcc -g -O3 tox_generic_bot.c -L/nix/store/b7ac47isdc4z1ajln6adz3ppcjs1708b-libsodium-1.0.18/lib -I/nix/store/hyxa8plwvgbj16fi2rlvm2sy6idlkab1-libsodium-1.0.18-dev/include -o tox_generic_bot || echo "fix me"
 
   compile_macos:
     runs-on: macos-latest
