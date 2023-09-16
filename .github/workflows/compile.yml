@@ -26,7 +26,6 @@ jobs:
           libavformat-dev \
           libavfilter-dev \
           libx264-dev \
-          libasan6 \
           clang-15 \
           clang-tools-15 \
           libclang-15-dev
@@ -37,7 +36,7 @@ jobs:
             -Wall \
             -Wextra \
             -Weverything \
-            -g -flto -fPIC tox_generic_bot.c -fno-omit-frame-pointer -fsanitize=address -static-libasan -Wl,-Bstatic $(pkg-config --cflags --libs libsodium) -Wl,-Bdynamic -pthread -o tox_generic_bot
+            -g -flto -fPIC tox_generic_bot.c -Wl,-Bstatic $(pkg-config --cflags --libs libsodium) -Wl,-Bdynamic -pthread -o tox_generic_bot
 
       - name: check binary
         run: |
