@@ -57,9 +57,15 @@ static const char global_version_string[] = "0.99.0";
 #define MIN_LOGGER_LEVEL LOGGER_LEVEL_INFO
 // define this before including toxcore amalgamation -------
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wformat"
+#pragma GCC diagnostic ignored "-Wint-conversion"
+#pragma GCC diagnostic ignored "-Wmissing-variable-declarations"
 // include toxcore amalgamation no ToxAV --------
 #include "toxcore_amalgamation_no_toxav.c"
 // include toxcore amalgamation no ToxAV --------
+#pragma GCC diagnostic pop
 
 enum CUSTOM_LOG_LEVEL {
   CLL_ERROR = 0,
