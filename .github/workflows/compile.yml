@@ -26,7 +26,7 @@ jobs:
           libavformat-dev \
           libavfilter-dev \
           libx264-dev \
-          libasan4 \
+          libasan6 \
           clang-15 \
           clang-tools-15 \
           libclang-15-dev
