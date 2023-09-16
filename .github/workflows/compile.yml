@@ -70,5 +70,7 @@ jobs:
              id;ls -al;pwd
              gcc --version
              gcc -O3 -std=c99 -g tox_generic_bot.c $(pkg-config --cflags --libs libsodium) -pthread -o tox_generic_bot
+             otool -L tox_generic_bot
+             ls -hal tox_generic_bot
 
 
