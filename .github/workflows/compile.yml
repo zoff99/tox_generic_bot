@@ -38,3 +38,18 @@ jobs:
           ls -al tox_generic_bot
           ls -hal tox_generic_bot
 
+  compile_nix:
+    runs-on: ubuntu-latest
+    steps:
+          - uses: actions/checkout@v3
+          - name: Run test
+            uses: addnab/docker-run-action@v3
+            with:
+                image: nixos/nix:latest
+                options: -v ${{ github.workspace }}:/work
+                run: |
+                    id;ls -al /work/; # compile command here
+                    gcc -version
+
+
+
