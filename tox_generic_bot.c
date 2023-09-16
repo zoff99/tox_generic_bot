@@ -70,6 +70,8 @@ static const char global_version_string[] = "0.99.0";
 //
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wmost"
+#pragma GCC diagnostic ignored "-Weverything"
 #pragma GCC diagnostic ignored "-Wformat"
 #pragma GCC diagnostic ignored "-Wint-conversion"
 #pragma GCC diagnostic ignored "-Wmissing-variable-declarations"
