@@ -30,6 +30,10 @@
 
  gcc -O3 -std=c99 -g -flto -fPIC tox_generic_bot.c -fno-omit-frame-pointer -fsanitize=address -static-libasan -Wl,-Bstatic $(pkg-config --cflags --libs libsodium) -Wl,-Bdynamic -pthread -o tox_generic_bot
 
+ linux clang compile:
+
+ clang-15 -O3 -std=c99 -Wall -Wextra -Weverything -g -flto -fPIC tox_generic_bot.c -fno-omit-frame-pointer -fsanitize=address -Wl,-Bstatic $(pkg-config --cflags --libs libsodium) -Wl,-Bdynamic -pthread -o tox_generic_bot
+
 */
 
 
@@ -37,10 +41,15 @@
 
 // ----------- version -----------
 // ----------- version -----------
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wunknown-warning-option"
+#pragma GCC diagnostic ignored "-Wunused-macros"
 #define VERSION_MAJOR 0
 #define VERSION_MINOR 99
-#define VERSION_PATCH 0
-static const char global_version_string[] = "0.99.0";
+#define VERSION_PATCH 1
+#pragma GCC diagnostic push
+static const char global_version_string[] = "0.99.1";
 // ----------- version -----------
 // ----------- version -----------
 
@@ -61,6 +70,7 @@ static const char global_version_string[] = "0.99.0";
 // ------------------- toxcore amalgamation ----------------
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wpragmas"
+#pragma clang diagnostic ignored "-Wunknown-warning-option"
 #pragma clang diagnostic ignored "-Wmost"
 #pragma clang diagnostic ignored "-Weverything"
 #pragma clang diagnostic ignored "-Wformat"
@@ -70,6 +80,7 @@ static const char global_version_string[] = "0.99.0";
 //
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wmost"
 #pragma GCC diagnostic ignored "-Weverything"
 #pragma GCC diagnostic ignored "-Wformat"
@@ -113,6 +124,10 @@ static bool main_loop_running = true;
 static int switch_tcponly = 0;
 static int use_tor = 0;
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wunknown-warning-option"
+#pragma GCC diagnostic ignored "-Wpadded"
 static struct Node1 {
     char *ip;
     char *key;
@@ -146,7 +161,6 @@ static struct Node1 {
 {"188.225.9.167","1911341A83E02503AB1FD6561BD64AF3A9D6C3F12B5FBB656976B2E678644A67",33445,33445},
 {"122.116.39.151","5716530A10D362867C8E87EE1CD5362A233BAFBBA4CF47FA73B7CAD368BD5E6E",33445,33445},
 {"195.123.208.139","534A589BA7427C631773D13083570F529238211893640C99D1507300F055FE73",33445,33445},
-//{"tox3.plastiras.org","4B031C96673B6FF123269FF18F2847E1909A8A04642BBECD0189AC8AEEADAF64",33445,33445},
 {"104.225.141.59","933BA20B2E258B4C0D475B6DECE90C7E827FE83EFA9655414E7841251B19A72C",43334,43334},
 {"198.98.49.206","28DB44A3CEEE69146469855DFFE5F54DA567F5D65E03EFB1D38BBAEFF2553255",33445,33445},
 {"172.105.109.31","D46E97CF995DC1820B92B7D899E152A217D36ABE22730FEA4B6BF1BFC06C617C",33445,33445},
@@ -154,12 +168,13 @@ static struct Node1 {
 {"91.146.66.26","B5E7DAC610DBDE55F359C7F8690B294C8E4FCEC4385DE9525DBFA5523EAD9D53",33445,33445},
 {"tox01.ky0uraku.xyz","FD04EB03ABC5FC5266A93D37B4D6D6171C9931176DC68736629552D8EF0DE174",33445,33445},
 {"tox02.ky0uraku.xyz","D3D6D7C0C7009FC75406B0A49E475996C8C4F8BCE1E6FC5967DE427F8F600527",33445,33445},
-//{"tox.plastiras.org","8E8B63299B3D520FB377FE5100E65E3322F7AE5B20A0ACED2981769FC5B43725",33445,33445},
 {"kusoneko.moe","BE7ED53CD924813507BA711FD40386062E6DC6F790EFA122C78F7CDEEE4B6D1B",33445,33445},
 {"tox2.plastiras.org","B6626D386BE7E3ACA107B46F48A5C4D522D29281750D44A0CBA6A2721E79C951",33445,33445},
 {"172.104.215.182","DA2BD927E01CD05EBCC2574EBE5BEBB10FF59AE0B2105A7D1E2B40E49BB20239",33445,33445},
     { NULL, NULL, 0, 0 }
 };
+#pragma GCC diagnostic push
+
 
 static void dbg(enum CUSTOM_LOG_LEVEL level, const char *fmt, ...)
 {
@@ -184,6 +199,11 @@ static void dbg(enum CUSTOM_LOG_LEVEL level, const char *fmt, ...)
     if (((int)level < 0) || ((int)level > 9))
     {
         level = 0;
+    }
+
+    if (strlen(fmt) < 1)
+    {
+        return;
     }
 
     level_and_format = calloc(1, strlen(fmt) + 3 + 1);
@@ -230,7 +250,12 @@ static void dbg(enum CUSTOM_LOG_LEVEL level, const char *fmt, ...)
     {
         va_list ap;
         va_start(ap, fmt);
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wunknown-warning-option"
+#pragma GCC diagnostic ignored "-Wformat-nonliteral"
         vfprintf(logfile, level_and_format_2, ap);
+#pragma GCC diagnostic pop
         va_end(ap);
     }
 
@@ -333,7 +358,12 @@ static void bin2upHex(const uint8_t *bin, uint32_t bin_size, char *hex, uint32_t
 {
     sodium_bin2hex(hex, hex_size, bin, bin_size);
     for (size_t i = 0; i < hex_size - 1; i++) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wunknown-warning-option"
+#pragma GCC diagnostic ignored "-Wdisabled-macro-expansion"
         hex[i] = (char)toupper(hex[i]);
+#pragma GCC diagnostic pop
     }
 }
 
@@ -621,6 +651,8 @@ static void print_tox_id(Tox *tox)
     tox_self_get_address(tox, tox_id_bin);
     const uint32_t tox_address_hex_size = (TOX_ADDRESS_SIZE) * 2 + 1;
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wvla"
     char tox_id_hex[tox_address_hex_size];
 #pragma GCC diagnostic pop
@@ -709,6 +741,8 @@ int main(int argc, char *argv[])
     setvbuf(logfile, NULL, _IOLBF, 0);
     dbg(CLL_INFO, "-LOGGER-\n");
 
+    dbg(CLL_INFO, "version:%s\n", global_version_string);
+
     Tox *tox = create_tox();
     tox_self_set_name(tox, bot_name_str, bot_name_len, NULL);
     update_tox_savedata(tox);
@@ -720,7 +754,12 @@ int main(int argc, char *argv[])
 
     struct sigaction sa;
     memset(&sa, 0, sizeof(struct sigaction));
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpragmas"
+#pragma GCC diagnostic ignored "-Wunknown-warning-option"
+#pragma GCC diagnostic ignored "-Wdisabled-macro-expansion"
     sa.sa_handler = INThandler;
+#pragma GCC diagnostic pop
     sa.sa_flags = 0;// not SA_RESTART!;
     sigaction(SIGINT, &sa, NULL);
     sigaction(SIGTERM, &sa, NULL);
