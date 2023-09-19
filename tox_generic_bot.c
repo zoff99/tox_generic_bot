@@ -595,11 +595,18 @@ static Tox* create_tox(void)
         size_t savedataSize = (size_t)ftell(f);
         fseek(f, 0, SEEK_SET);
         savedata = calloc(1, savedataSize);
-        size_t ret = fread(savedata, savedataSize, 1, f);
-        // TODO: handle ret return vlaue here!
-        if (ret)
+        if (!savedata)
         {
-            // ------
+            fclose(f);
+            return NULL;
+        }
+
+        size_t ret = fread(savedata, savedataSize, 1, f);
+        if (ret != 1)
+        {
+            free(savedata);
+            fclose(f);
+            return NULL;
         }
         fclose(f);
         options.savedata_type = TOX_SAVEDATA_TYPE_TOX_SAVE;
@@ -744,6 +751,14 @@ int main(int argc, char *argv[])
     dbg(CLL_INFO, "version:%s\n", global_version_string);
 
     Tox *tox = create_tox();
+    if (tox == NULL) {
+        if (logfile)
+        {
+            fclose(logfile);
+            logfile = NULL;
+        }
+        exit(-1);
+    }
     tox_self_set_name(tox, bot_name_str, bot_name_len, NULL);
     update_tox_savedata(tox);
 
