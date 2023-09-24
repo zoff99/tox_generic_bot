@@ -34,6 +34,13 @@
 
  clang-15 -O3 -std=c99 -Wall -Wextra -Weverything -g -flto -fPIC tox_generic_bot.c -fno-omit-frame-pointer -fsanitize=address -Wl,-Bstatic $(pkg-config --cflags --libs libsodium) -Wl,-Bdynamic -pthread -o tox_generic_bot
 
+
+
+ linux compile with TokTok toxcore:
+
+ gcc -O3 -std=c99 -DUSE_TOKTOK_TOXCORE -g -flto -fPIC tox_generic_bot.c -fno-omit-frame-pointer -fsanitize=address -static-libasan -Wl,-Bstatic $(pkg-config --cflags --libs libtoxcore libsodium) -Wl,-Bdynamic -pthread -o tox_generic_bot
+
+
 */
 
 
@@ -47,9 +54,9 @@
 #pragma GCC diagnostic ignored "-Wunused-macros"
 #define VERSION_MAJOR 0
 #define VERSION_MINOR 99
-#define VERSION_PATCH 1
+#define VERSION_PATCH 2
 #pragma GCC diagnostic push
-static const char global_version_string[] = "0.99.1";
+static const char global_version_string[] = "0.99.2";
 // ----------- version -----------
 // ----------- version -----------
 
@@ -58,6 +65,9 @@ static const char global_version_string[] = "0.99.1";
 #include <pthread.h>
 #include <signal.h>
 #include <sodium.h>
+#include <stdarg.h>
+#include <string.h>
+#include <sys/time.h>
 
 // define this before including toxcore amalgamation -------
 #ifdef MIN_LOGGER_LEVEL
@@ -86,9 +96,14 @@ static const char global_version_string[] = "0.99.1";
 #pragma GCC diagnostic ignored "-Wformat"
 #pragma GCC diagnostic ignored "-Wint-conversion"
 #pragma GCC diagnostic ignored "-Wmissing-variable-declarations"
+
+#ifdef USE_TOKTOK_TOXCORE
+#include "tox/tox.h"
+#else
 // include toxcore amalgamation no ToxAV --------
 #include "toxcore_amalgamation_no_toxav.c"
 // include toxcore amalgamation no ToxAV --------
+#endif
 #pragma GCC diagnostic pop
 //
 #pragma clang diagnostic pop
