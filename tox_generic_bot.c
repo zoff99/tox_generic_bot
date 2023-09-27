@@ -36,6 +36,14 @@
 
 
 
+
+ linux compile with FORTIFY:
+
+ gcc -O3 -std=c99 -g -D_FORTIFY_SOURCE=2 -flto -fPIC tox_generic_bot.c -Wl,-Bstatic $(pkg-config --cflags --libs libsodium) -Wl,-Bdynamic -pthread -o tox_generic_bot
+
+
+
+
  linux compile with TokTok toxcore:
 
  gcc -O3 -std=c99 -DUSE_TOKTOK_TOXCORE -g -flto -fPIC tox_generic_bot.c -fno-omit-frame-pointer -fsanitize=address -static-libasan -Wl,-Bstatic $(pkg-config --cflags --libs libtoxcore libsodium) -Wl,-Bdynamic -pthread -o tox_generic_bot
