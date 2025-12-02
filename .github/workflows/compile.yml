@@ -8,7 +8,7 @@ jobs:
   compile_linux:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - name: install dependencies
         run: |
           sudo apt-get update && \
@@ -47,7 +47,7 @@ jobs:
   compile_nix:
     runs-on: ubuntu-latest
     steps:
-          - uses: actions/checkout@v3
+          - uses: actions/checkout@v6
           - name: docker build
             uses: addnab/docker-run-action@v3
             with:
@@ -64,7 +64,7 @@ jobs:
   compile_macos:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - name: build
         run: |
              brew update
