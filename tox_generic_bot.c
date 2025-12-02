@@ -57,6 +57,7 @@
 // ----------- version -----------
 // ----------- version -----------
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma GCC diagnostic ignored "-Wpragmas"
 #pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wunused-macros"
@@ -87,6 +88,7 @@ static const char global_version_string[] = "0.99.2";
 
 // ------------------- toxcore amalgamation ----------------
 #pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunknown-pragmas"
 #pragma clang diagnostic ignored "-Wpragmas"
 #pragma clang diagnostic ignored "-Wunknown-warning-option"
 #pragma clang diagnostic ignored "-Wmost"
@@ -97,6 +99,7 @@ static const char global_version_string[] = "0.99.2";
 #pragma clang diagnostic ignored "-Wunused-variable"
 //
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma GCC diagnostic ignored "-Wpragmas"
 #pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wmost"
@@ -148,6 +151,7 @@ static int switch_tcponly = 0;
 static int use_tor = 0;
 
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma GCC diagnostic ignored "-Wpragmas"
 #pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wpadded"
@@ -274,6 +278,7 @@ static void dbg(enum CUSTOM_LOG_LEVEL level, const char *fmt, ...)
         va_list ap;
         va_start(ap, fmt);
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma GCC diagnostic ignored "-Wpragmas"
 #pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wformat-nonliteral"
@@ -382,6 +387,7 @@ static void bin2upHex(const uint8_t *bin, uint32_t bin_size, char *hex, uint32_t
     sodium_bin2hex(hex, hex_size, bin, bin_size);
     for (size_t i = 0; i < hex_size - 1; i++) {
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma GCC diagnostic ignored "-Wpragmas"
 #pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wdisabled-macro-expansion"
@@ -546,6 +552,12 @@ static void group_peer_status_cb(Tox *tox, uint32_t group_number, uint32_t peer_
     update_tox_savedata(tox);
 }
 
+static void group_message_cb(Tox *tox, uint32_t group_number, uint32_t peer_id, Tox_Message_Type type,
+                                  const uint8_t *message, size_t length, uint32_t message_id, void *user_data)
+{
+    dbg(CLL_INFO, "group peer message, group %d peer %d\n", group_number, peer_id);
+}
+
 static void set_tox_callbacks(Tox *tox)
 {
     // ----- CALLBACKS -----
@@ -567,6 +579,7 @@ static void set_tox_callbacks(Tox *tox)
     tox_callback_group_join_fail(tox, group_join_fail_cb);
     tox_callback_group_moderation(tox, group_moderation_cb);
     tox_callback_group_peer_status(tox, group_peer_status_cb);
+    tox_callback_group_message(tox, group_message_cb);
     // ----- CALLBACKS -----
 }
 
@@ -681,6 +694,7 @@ static void print_tox_id(Tox *tox)
     tox_self_get_address(tox, tox_id_bin);
     const uint32_t tox_address_hex_size = (TOX_ADDRESS_SIZE) * 2 + 1;
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma GCC diagnostic ignored "-Wpragmas"
 #pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wvla"
@@ -793,6 +807,7 @@ int main(int argc, char *argv[])
     struct sigaction sa;
     memset(&sa, 0, sizeof(struct sigaction));
 #pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunknown-pragmas"
 #pragma GCC diagnostic ignored "-Wpragmas"
 #pragma GCC diagnostic ignored "-Wunknown-warning-option"
 #pragma GCC diagnostic ignored "-Wdisabled-macro-expansion"
