@@ -63,9 +63,9 @@
 #pragma GCC diagnostic ignored "-Wunused-macros"
 #define VERSION_MAJOR 0
 #define VERSION_MINOR 99
-#define VERSION_PATCH 2
+#define VERSION_PATCH 3
 #pragma GCC diagnostic push
-static const char global_version_string[] = "0.99.2";
+static const char global_version_string[] = "0.99.3";
 // ----------- version -----------
 // ----------- version -----------
 
@@ -668,8 +668,6 @@ static void bootstrap_tox(Tox *tox)
 {
     // ----- bootstrap -----
     dbg(CLL_INFO, "Tox bootstrapping\n");
-    // dummy node to bootstrap
-    tox_bootstrap(tox, "local", 7766, (uint8_t *)"2AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1", NULL);
     for (int i = 0; nodes1[i].ip; i++) {
         uint8_t *key = (uint8_t *)calloc(1, 100);
         if (!key) {
@@ -677,9 +675,7 @@ static void bootstrap_tox(Tox *tox)
             continue;
         }
         hex_string_to_bin2(nodes1[i].key, key);
-        if (use_tor == 0) {
-            tox_bootstrap(tox, nodes1[i].ip, nodes1[i].udp_port, key, NULL);
-        }
+        tox_bootstrap(tox, nodes1[i].ip, nodes1[i].udp_port, key, NULL);
         if (nodes1[i].tcp_port != 0) {
             tox_add_tcp_relay(tox, nodes1[i].ip, nodes1[i].tcp_port, key, NULL);
         }
